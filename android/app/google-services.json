@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "209222226101",
+    "project_id": "fire-test-fabio",
+    "storage_bucket": "fire-test-fabio.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209222226101:android:4dc740fd4c67d521fa6efc",
+        "android_client_info": {
+          "package_name": "com.example.fire_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBLV1YMNtxEvfjRQmhMmheJTUeQUkjis0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
