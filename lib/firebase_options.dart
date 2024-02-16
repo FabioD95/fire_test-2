@@ -66,6 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '209222226101',
     projectId: 'fire-test-fabio',
     storageBucket: 'fire-test-fabio.appspot.com',
+    iosClientId: '209222226101-ntvmv3tqod0skrjauagv5b10rbg04ajq.apps.googleusercontent.com',
     iosBundleId: 'com.example.fireTest',
   );
 
@@ -75,6 +76,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '209222226101',
     projectId: 'fire-test-fabio',
     storageBucket: 'fire-test-fabio.appspot.com',
+    iosClientId: '209222226101-o9l716fa2l3vqvhnlios2e8j260997q3.apps.googleusercontent.com',
     iosBundleId: 'com.example.fireTest.RunnerTests',
   );
 }
