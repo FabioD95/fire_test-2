@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,53 +23,58 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<UserCredential> signInWithGoogle() async {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    }
+
+    Future uploadFile(File file) async {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user')
+          .child('5SKYwFBkpRMeFHq09AdULDGLbcl2')
+          .child('card-id.jpg');
+      try {
+        await storageRef.putFile(file);
+        final imageUrl = await storageRef.getDownloadURL();
+        print('----imageUrl: $imageUrl');
+      } catch (e) {
+        print('error: $e');
+      }
+    }
+
+    Future pickFile() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        uploadFile(file);
+      }
+    }
+
     return MaterialApp(
-      title: 'Fire test',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Home'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            OutlinedButton.icon(
-              onPressed: () => {signInWithGoogle()},
-              icon: const Icon(Icons.login),
-              label: const Text('Login with Google'),
-            ),
-          ],
+      home: Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => {signInWithGoogle()},
+                icon: const Icon(Icons.login),
+                label: const Text('Login with Google'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => {pickFile()},
+                icon: const Icon(Icons.file_upload),
+                label: const Text('File picker & upload'),
+              ),
+            ],
+          ),
         ),
       ),
     );
