@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -57,6 +58,24 @@ class MyApp extends StatelessWidget {
       }
     }
 
+    Future<void> uploadObject() async {
+      final user = <String, dynamic>{
+        "first": "Ada",
+        "last": "Lovelace",
+        "born": 1815
+      };
+
+      await FirebaseFirestore.instance
+          .collection('cards')
+          .doc('5SKYwFBkpRMeFHq09AdULDGLbcl2')
+          .set(user);
+
+      await FirebaseFirestore.instance
+          .collection('user-data')
+          .doc('5SKYwFBkpRMeFHq09AdULDGLbcl2')
+          .set(user);
+    }
+
     return MaterialApp(
       home: Scaffold(
         body: Center(
@@ -72,6 +91,11 @@ class MyApp extends StatelessWidget {
                 onPressed: () => {pickFile()},
                 icon: const Icon(Icons.file_upload),
                 label: const Text('File picker & upload'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => {uploadObject()},
+                icon: const Icon(Icons.upload_file_outlined),
+                label: const Text('upload object to firestore'),
               ),
             ],
           ),
